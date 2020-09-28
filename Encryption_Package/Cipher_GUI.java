@@ -1,7 +1,6 @@
 package Encryption_Package;
 
 import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -91,11 +90,11 @@ public class Cipher_GUI {
                     if (radioOne.isSelected()) {
                         System.out.println("Encryption is Selected");
                         outputArea.setText(
-                                Cipher.caesarCipherEncryption(inputArea.getText(), (int) offsetSpin.getValue()));
+                                Caesar_Cipher.caesarCipherEncryption(inputArea.getText(), (int) offsetSpin.getValue()));
                     } else if (radioTwo.isSelected()) {
                         System.out.println("Decryption is Selected");
                         outputArea.setText(
-                                Cipher.caesarCipherDecryption(inputArea.getText(), (int) offsetSpin.getValue()));
+                                Caesar_Cipher.caesarCipherDecryption(inputArea.getText(), (int) offsetSpin.getValue()));
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
@@ -154,8 +153,8 @@ public class Cipher_GUI {
             public void actionPerformed(ActionEvent e) {
                 if (cipherCombo.getSelectedItem().equals("Caesar Cipher")) {
                     System.out.println("Caesar Cipher is Selected");
-                    int offsetGuess = Cipher.breakCaesarCipher(decryptArea.getText());
-                    String decryptedGuess = Cipher.caesarCipherDecryption(decryptArea.getText(), offsetGuess);
+                    int offsetGuess = Caesar_Cipher.breakCaesarCipher(decryptArea.getText());
+                    String decryptedGuess = Caesar_Cipher.caesarCipherDecryption(decryptArea.getText(), offsetGuess);
                     outputArea.setText("Results Recorded Below:\nOffset Guess : " + offsetGuess
                             + "\nDecrypted Message : " + decryptedGuess);
                     breakDialog.setVisible(false);
