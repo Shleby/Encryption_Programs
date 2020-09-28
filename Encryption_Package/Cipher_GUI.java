@@ -11,15 +11,21 @@ public class Cipher_GUI {
     private static JLabel labelTwo;
     private static JLabel labelThree;
     private static JLabel labelFour;
+    private static JLabel cipherLabel;
+    private static JLabel decryptLabel;
     private static String cipherChoices[] = { "", "Caesar Cipher", "Fake Cipher" };
 
     public static JComboBox comboOne;
+    public static JComboBox cipherCombo;
     public static JRadioButton radioOne;
     public static JRadioButton radioTwo;
     public static JButton submitButton;
     public static JButton attemptButton;
+    public static JButton breakButton;
+    public static JButton clearButton;
     public static JTextArea inputArea;
     public static JTextArea outputArea;
+    public static JTextArea decryptArea;
     public static JSpinner offsetSpin;
 
     public static void launchGui() {
@@ -116,6 +122,7 @@ public class Cipher_GUI {
 
             }
         });
+
         mainFrame.add(labelOne);
         mainFrame.add(comboOne);
         mainFrame.add(labelFour);
@@ -134,9 +141,57 @@ public class Cipher_GUI {
         mainFrame.setLayout(null);// using no layout managers
         mainFrame.setVisible(true);// making the frame visible
 
+        cipherLabel = new JLabel("Select the cipher you wish to break: ");
+        cipherCombo = new JComboBox(cipherChoices);
+
+        decryptLabel = new JLabel("Enter the message you wish to break: ");
+        decryptArea = new JTextArea();
+        decryptArea.setLineWrap(true);
+        decryptArea.setBounds(20, 20, 200, 100);
+
+        breakButton = new JButton("Submit");
+        breakButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (cipherCombo.getSelectedItem().equals("Caesar Cipher")) {
+                    System.out.println("Caesar Cipher is Selected");
+                    int offsetGuess = Cipher.breakCaesarCipher(decryptArea.getText());
+                    String decryptedGuess = Cipher.caesarCipherDecryption(decryptArea.getText(), offsetGuess);
+                    outputArea.setText("Results Recorded Below:\nOffset Guess : " + offsetGuess
+                            + "\nDecrypted Message : " + decryptedGuess);
+                    breakDialog.setVisible(false);
+                } else if (cipherCombo.getSelectedItem().equals("Fake Cipher")) {
+                    System.out.println("Fake Cipher is Selected");
+                } else {
+                    System.out.println("Error: No Cipher Selected");
+                }
+            }
+        });
+
+        breakDialog.add(cipherLabel);
+        breakDialog.add(cipherCombo);
+        breakDialog.add(decryptLabel);
+        breakDialog.add(decryptArea);
+        breakDialog.add(breakButton);
+
         breakDialog.setTitle("Breaking the Cipher");
         breakDialog.setSize(500, 500);
         breakDialog.setLayout(new FlowLayout(FlowLayout.CENTER));
         breakDialog.setVisible(false);
+
+        clearButton = new JButton("Clear All Settings");
+        clearButton.setBounds(400, 520, 200, 30);
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                inputArea.setText("");
+                outputArea.setText("");
+                decryptArea.setText("");
+                comboOne.setSelectedIndex(0);
+                cipherCombo.setSelectedItem(0);
+                modeGroup.clearSelection();
+            }
+        });
+
+        mainFrame.add(clearButton);
+
     }
 }
