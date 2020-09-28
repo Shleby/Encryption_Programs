@@ -1,33 +1,56 @@
-package main.java.Encryption_Package;
+package Encryption_Package;
 
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-
-import Encryption_Package.Cipher;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
     private static JLabel labelTwo;
     private static JLabel labelThree;
+    private static JLabel labelFour;
+    private static String cipherChoices[] = { "", "Caesar Cipher", "Fake Cipher" };
 
     public static JComboBox comboOne;
     public static JRadioButton radioOne;
     public static JRadioButton radioTwo;
     public static JButton submitButton;
+    public static JButton attemptButton;
     public static JTextArea inputArea;
     public static JTextArea outputArea;
+    public static JSpinner offsetSpin;
 
     public static void launchGui() {
         JFrame mainFrame = new JFrame();
+        JFrame breakDialog = new JFrame();
 
         labelOne = new JLabel("Choose Encryption Cipher: ");
         labelOne.setBounds(20, 20, 180, 20);
 
-        String cipherChoices[] = { "", "CaesarCipher", "FakeCipher" };
+        labelFour = new JLabel("Select an Offset Value: ");
+        labelFour.setBounds(340, 20, 180, 20);
+        labelFour.setVisible(false);
+
+        SpinnerModel value = new SpinnerNumberModel(6, 1, 26, 1);
+        offsetSpin = new JSpinner(value);
+        offsetSpin.setBounds(480, 20, 40, 20);
+        offsetSpin.setVisible(false);
+
         comboOne = new JComboBox(cipherChoices);
         comboOne.setBounds(190, 20, 110, 20);
-
+        comboOne.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent j) {
+                if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
+                    labelFour.setVisible(true);
+                    offsetSpin.setVisible(true);
+                } else if (comboOne.getSelectedItem() != "Caesar Cipher") {
+                    labelFour.setVisible(false);
+                    offsetSpin.setVisible(false);
+                }
+            }
+        });
         labelThree = new JLabel("Select Mode: ");
         labelThree.setBounds(20, 60, 80, 20);
 
@@ -57,18 +80,20 @@ public class Cipher_GUI {
         submitButton.setBounds(20, 520, 100, 30);
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (comboOne.getSelectedItem().equals("CaesarCipher")) {
+                if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
                     System.out.println("Caesar Cipher is Selected");
                     if (radioOne.isSelected()) {
                         System.out.println("Encryption is Selected");
-                        outputArea.setText(Cipher.caesarCipherEncryption(inputArea.getText()));
+                        outputArea.setText(
+                                Cipher.caesarCipherEncryption(inputArea.getText(), (int) offsetSpin.getValue()));
                     } else if (radioTwo.isSelected()) {
                         System.out.println("Decryption is Selected");
-                        outputArea.setText(Cipher.caesarCipherDecryption(inputArea.getText()));
+                        outputArea.setText(
+                                Cipher.caesarCipherDecryption(inputArea.getText(), (int) offsetSpin.getValue()));
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
-                } else if (comboOne.getSelectedItem().equals("FakeCipher")) {
+                } else if (comboOne.getSelectedItem().equals("Fake Cipher")) {
                     System.out.println("Fake Cipher is Selected");
                     if (radioOne.isSelected()) {
                         System.out.println("Encryption is Selected");
@@ -83,8 +108,18 @@ public class Cipher_GUI {
             }
         });
 
+        attemptButton = new JButton("Attempt to break the cipher");
+        attemptButton.setBounds(160, 520, 200, 30);
+        attemptButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                breakDialog.setVisible(true);
+
+            }
+        });
         mainFrame.add(labelOne);
         mainFrame.add(comboOne);
+        mainFrame.add(labelFour);
+        mainFrame.add(offsetSpin);
         mainFrame.add(labelThree);
         mainFrame.add(radioOne);
         mainFrame.add(radioTwo);
@@ -92,10 +127,16 @@ public class Cipher_GUI {
         mainFrame.add(inputArea);
         mainFrame.add(outputArea);
         mainFrame.add(submitButton);
+        mainFrame.add(attemptButton);
 
         mainFrame.setTitle("Encryption Program");
         mainFrame.setSize(1000, 700);// 400 width and 500 height
         mainFrame.setLayout(null);// using no layout managers
         mainFrame.setVisible(true);// making the frame visible
+
+        breakDialog.setTitle("Breaking the Cipher");
+        breakDialog.setSize(500, 500);
+        breakDialog.setLayout(new FlowLayout(FlowLayout.CENTER));
+        breakDialog.setVisible(false);
     }
 }
