@@ -1,5 +1,7 @@
 package Encryption_Package;
 
+import Encryption_Package.Display.Cipher_GUI;
+
 /**
  * 
  */

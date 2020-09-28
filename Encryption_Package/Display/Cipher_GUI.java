@@ -1,9 +1,11 @@
-package Encryption_Package;
+package Encryption_Package.Display;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import Encryption_Package.Ciphers.Caesar_Cipher;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
