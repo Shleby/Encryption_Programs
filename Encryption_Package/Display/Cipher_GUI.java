@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import Encryption_Package.Ciphers.Atbash_Cipher;
 import Encryption_Package.Ciphers.Caesar_Cipher;
 
 public class Cipher_GUI {
@@ -14,7 +15,7 @@ public class Cipher_GUI {
     private static JLabel labelFour;
     private static JLabel cipherLabel;
     private static JLabel decryptLabel;
-    private static String cipherChoices[] = { "", "Caesar Cipher", "Fake Cipher" };
+    private static String cipherChoices[] = { "", "Atbash Cipher", "Caesar Cipher" };
 
     public static JComboBox comboOne;
     public static JComboBox cipherCombo;
@@ -100,12 +101,14 @@ public class Cipher_GUI {
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
-                } else if (comboOne.getSelectedItem().equals("Fake Cipher")) {
-                    System.out.println("Fake Cipher is Selected");
+                } else if (comboOne.getSelectedItem().equals("Atbash Cipher")) {
+                    System.out.println("Atbash Cipher is Selected");
                     if (radioOne.isSelected()) {
                         System.out.println("Encryption is Selected");
+                        outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
                     } else if (radioTwo.isSelected()) {
                         System.out.println("Decryption is Selected");
+                        outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
