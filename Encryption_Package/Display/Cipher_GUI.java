@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import Encryption_Package.Ciphers.Affine_Cipher;
 import Encryption_Package.Ciphers.Atbash_Cipher;
 import Encryption_Package.Ciphers.Caesar_Cipher;
 import Encryption_Package.Ciphers.ROT13_Cipher;
@@ -16,10 +17,13 @@ public class Cipher_GUI {
     private static JLabel labelFour;
     private static JLabel cipherLabel;
     private static JLabel decryptLabel;
-    private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher" };
+    private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher", "Affine Cipher" };
+    private static String aChoices[] = { "1", "3", "5", "7", "9", "11", "15", "17", "19", "21", "23", "25" }; // Prime
+                                                                                                              // Numbers
 
     public static JComboBox comboOne;
     public static JComboBox cipherCombo;
+    public static JComboBox aCombo;
     public static JRadioButton radioOne;
     public static JRadioButton radioTwo;
     public static JButton submitButton;
@@ -30,6 +34,7 @@ public class Cipher_GUI {
     public static JTextArea outputArea;
     public static JTextArea decryptArea;
     public static JSpinner offsetSpin;
+    public static JSpinner bSpin;
 
     public static void launchGui() {
         JFrame mainFrame = new JFrame();
@@ -42,10 +47,19 @@ public class Cipher_GUI {
         labelFour.setBounds(340, 20, 180, 20);
         labelFour.setVisible(false);
 
-        SpinnerModel value = new SpinnerNumberModel(6, 1, 26, 1);
-        offsetSpin = new JSpinner(value);
+        SpinnerModel offsetValue = new SpinnerNumberModel(6, 1, 26, 1);
+        offsetSpin = new JSpinner(offsetValue);
         offsetSpin.setBounds(480, 20, 40, 20);
         offsetSpin.setVisible(false);
+
+        aCombo = new JComboBox(aChoices);
+        aCombo.setBounds(480, 20, 40, 20);
+        aCombo.setVisible(false);
+
+        SpinnerModel bValue = new SpinnerNumberModel(0, 0, 25, 1);
+        bSpin = new JSpinner(bValue);
+        bSpin.setBounds(520, 20, 40, 20);
+        bSpin.setVisible(false);
 
         comboOne = new JComboBox(cipherChoices);
         comboOne.setBounds(190, 20, 110, 20);
@@ -54,9 +68,18 @@ public class Cipher_GUI {
                 if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
                     labelFour.setVisible(true);
                     offsetSpin.setVisible(true);
-                } else if (comboOne.getSelectedItem() != "Caesar Cipher") {
+                    aCombo.setVisible(false);
+                    bSpin.setVisible(false);
+                } else if (comboOne.getSelectedItem().equals("Affine Cipher")) {
+                    aCombo.setVisible(true);
+                    bSpin.setVisible(true);
                     labelFour.setVisible(false);
                     offsetSpin.setVisible(false);
+                } else {
+                    labelFour.setVisible(false);
+                    offsetSpin.setVisible(false);
+                    aCombo.setVisible(false);
+                    bSpin.setVisible(false);
                 }
             }
         });
@@ -102,6 +125,19 @@ public class Cipher_GUI {
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
+                } else if (comboOne.getSelectedItem().equals("Affine Cipher")) {
+                    System.out.println("Affine Cipher is Selected");
+                    if (radioOne.isSelected()) {
+                        System.out.println("Encryption is Selected");
+                        outputArea.setText(Affine_Cipher.affineEncryption(inputArea.getText(),
+                                aCombo.getSelectedItem().toString(), (int) bSpin.getValue()));
+                    } else if (radioTwo.isSelected()) {
+                        System.out.println("Decryption is Selected");
+                        outputArea.setText(Affine_Cipher.affineDecryption(inputArea.getText(),
+                                aCombo.getSelectedItem().toString(), (int) bSpin.getValue()));
+                    } else {
+                        System.out.println("Error: No mode has been selected");
+                    }
                 } else if (comboOne.getSelectedItem().equals("Atbash Cipher")) {
                     System.out.println("Atbash Cipher is Selected");
                     if (radioOne.isSelected()) {
@@ -135,7 +171,6 @@ public class Cipher_GUI {
         attemptButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 breakDialog.setVisible(true);
-
             }
         });
 
@@ -151,6 +186,8 @@ public class Cipher_GUI {
         mainFrame.add(outputArea);
         mainFrame.add(submitButton);
         mainFrame.add(attemptButton);
+        mainFrame.add(bSpin);
+        mainFrame.add(aCombo);
 
         mainFrame.setTitle("Encryption Program");
         mainFrame.setSize(1000, 700);// 400 width and 500 height
@@ -184,6 +221,9 @@ public class Cipher_GUI {
                     outputArea.setText(
                             "No break is needed. ROT13 will always be a caesar cipher with offset = 13. Please utilize encryption/decryption functionality.");
                     breakDialog.setVisible(false);
+                } else if (cipherCombo.getSelectedItem().equals("Affine Cipher")) {
+                    // TODO : Implement
+                    System.out.println("To implement later");
                 } else {
                     System.out.println("Error: No Cipher Selected");
                 }
