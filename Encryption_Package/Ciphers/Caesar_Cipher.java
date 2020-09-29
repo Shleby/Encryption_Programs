@@ -3,6 +3,11 @@ package Encryption_Package.Ciphers;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+/**
+ * The caesar cipher is a substitution cipher that relies on a key to decide how
+ * to encrypt or decrypt a message. It is broken by utilizing the chi square
+ * statistical method and finding the lowest chi-square to guess the offset key.
+ */
 public class Caesar_Cipher {
     private static int ALPHABET_SIZE = 26;
     // The probability a english letter will be used in a text of 1000 letters

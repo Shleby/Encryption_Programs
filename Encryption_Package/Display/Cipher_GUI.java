@@ -7,6 +7,7 @@ import javax.swing.border.*;
 
 import Encryption_Package.Ciphers.Atbash_Cipher;
 import Encryption_Package.Ciphers.Caesar_Cipher;
+import Encryption_Package.Ciphers.ROT13_Cipher;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
@@ -15,7 +16,7 @@ public class Cipher_GUI {
     private static JLabel labelFour;
     private static JLabel cipherLabel;
     private static JLabel decryptLabel;
-    private static String cipherChoices[] = { "", "Atbash Cipher", "Caesar Cipher" };
+    private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher" };
 
     public static JComboBox comboOne;
     public static JComboBox cipherCombo;
@@ -112,6 +113,17 @@ public class Cipher_GUI {
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
+                } else if (comboOne.getSelectedItem().equals("ROT13 Cipher")) {
+                    System.out.println("ROT13 Cipher is Selected");
+                    if (radioOne.isSelected()) {
+                        System.out.println("Encryption is Selected");
+                        outputArea.setText(ROT13_Cipher.rot13Encryption(inputArea.getText()));
+                    } else if (radioTwo.isSelected()) {
+                        System.out.println("Decryption is Selected");
+                        outputArea.setText(ROT13_Cipher.rot13Decryption(inputArea.getText()));
+                    } else {
+                        System.out.println("Error: No mode has been selected");
+                    }
                 } else {
                     System.out.println("Error: No Cipher Selected");
                 }
@@ -163,8 +175,15 @@ public class Cipher_GUI {
                     outputArea.setText("Results Recorded Below:\nOffset Guess : " + offsetGuess
                             + "\nDecrypted Message : " + decryptedGuess);
                     breakDialog.setVisible(false);
-                } else if (cipherCombo.getSelectedItem().equals("Fake Cipher")) {
-                    System.out.println("Fake Cipher is Selected");
+                } else if (cipherCombo.getSelectedItem().equals("Abtash Cipher")) {
+                    System.out.println("Abtash Cipher is Selected");
+                    outputArea.setText("No break is needed. Please utilize encryption/decryption functionality.");
+                    breakDialog.setVisible(false);
+                } else if (cipherCombo.getSelectedItem().equals("ROT13 Cipher")) {
+                    System.out.println("ROT13 Cipher is selected");
+                    outputArea.setText(
+                            "No break is needed. ROT13 will always be a caesar cipher with offset = 13. Please utilize encryption/decryption functionality.");
+                    breakDialog.setVisible(false);
                 } else {
                     System.out.println("Error: No Cipher Selected");
                 }
