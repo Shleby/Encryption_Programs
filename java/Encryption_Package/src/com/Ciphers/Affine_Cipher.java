@@ -1,4 +1,4 @@
-package Encryption_Package.Ciphers;
+package java.Encryption_Package.src.com.Ciphers;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -25,7 +25,7 @@ public class Affine_Cipher {
             }
         }
 
-        return result.toString();
+        return result.toString().toLowerCase();
     }
 
     public static String affineDecryption(String msg, String a, int b) {

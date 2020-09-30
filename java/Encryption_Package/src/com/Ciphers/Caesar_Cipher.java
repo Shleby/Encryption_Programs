@@ -1,4 +1,4 @@
-package Encryption_Package.Ciphers;
+package java.Encryption_Package.src.com.Ciphers;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;

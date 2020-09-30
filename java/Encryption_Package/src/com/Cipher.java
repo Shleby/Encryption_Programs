@@ -1,8 +1,7 @@
-package Encryption_Package;
+package java.Encryption_Package.src.com;
 
 import java.util.HashMap;
-
-import Encryption_Package.Display.Cipher_GUI;
+import java.Encryption_Package.src.com.Display.Cipher_GUI;
 
 /**
  * Main Method that launches the GUI

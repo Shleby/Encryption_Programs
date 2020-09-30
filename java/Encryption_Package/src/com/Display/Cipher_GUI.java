@@ -1,14 +1,14 @@
-package Encryption_Package.Display;
+package java.Encryption_Package.src.com.Display;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import Encryption_Package.Ciphers.Affine_Cipher;
-import Encryption_Package.Ciphers.Atbash_Cipher;
-import Encryption_Package.Ciphers.Caesar_Cipher;
-import Encryption_Package.Ciphers.ROT13_Cipher;
+import java.Encryption_Package.src.com.Ciphers.Affine_Cipher;
+import java.Encryption_Package.src.com.Ciphers.Atbash_Cipher;
+import java.Encryption_Package.src.com.Ciphers.Caesar_Cipher;
+import java.Encryption_Package.src.com.Ciphers.ROT13_Cipher;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
