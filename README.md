@@ -3,7 +3,7 @@
 | Cipher | Encrypt | Decrypt | Break |
 | ------ | :-----: | :-----: | :---: |
 | Caesar |   YES   |   YES   |  YES  |
-| Affine |   NO    |   NO    |  NO   |
+| Affine |   YES   |   YES   |  NO   |
 | ROT13  |   YES   |   YES   |  N/A  |
 | Atbash |   YES   |   YES   |  N/A  |
 | Enigma |   NO    |   NO    |  NO   |

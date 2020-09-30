@@ -1,4 +1,4 @@
-package java.Encryption_Package.src.com.Ciphers;
+package java_ciphers.Encryption_Package.src.com.Ciphers;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -23,12 +23,12 @@ public class Caesar_Cipher {
         StringBuilder result = new StringBuilder();
 
         for (char character : msg.toCharArray()) {
-            if (character != ' ' && Character.isLowerCase(character)) {
+            if (Character.isLowerCase(character)) {
                 int currentPosition = character - 'a';
                 int newPosition = (currentPosition + offSet) % ALPHABET_SIZE;
                 char newCharacter = (char) ('a' + newPosition);
                 result.append(newCharacter);
-            } else if (character != ' ' && Character.isUpperCase(character)) {
+            } else if (Character.isUpperCase(character)) {
                 int currentPosition = character - 'A';
                 int newPosition = (currentPosition + offSet) % ALPHABET_SIZE;
                 char newCharacter = (char) ('A' + newPosition);
@@ -44,12 +44,12 @@ public class Caesar_Cipher {
         StringBuilder result = new StringBuilder();
 
         for (char character : msg.toCharArray()) {
-            if (character != ' ' && Character.isLowerCase(character)) {
+            if (Character.isLowerCase(character)) {
                 int currentPosition = character - 'a';
                 int newPosition = (currentPosition + (ALPHABET_SIZE - offSet)) % ALPHABET_SIZE;
                 char newCharacter = (char) ('a' + newPosition);
                 result.append(newCharacter);
-            } else if (character != ' ' && Character.isUpperCase(character)) {
+            } else if (Character.isUpperCase(character)) {
                 int currentPosition = character - 'A';
                 int newPosition = (currentPosition + (ALPHABET_SIZE - offSet)) % ALPHABET_SIZE;
                 char newCharacter = (char) ('A' + newPosition);
