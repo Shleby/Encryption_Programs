@@ -5,10 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import java_ciphers.Encryption_Package.src.com.Ciphers.Affine_Cipher;
-import java_ciphers.Encryption_Package.src.com.Ciphers.Atbash_Cipher;
-import java_ciphers.Encryption_Package.src.com.Ciphers.Caesar_Cipher;
-import java_ciphers.Encryption_Package.src.com.Ciphers.ROT13_Cipher;
+import java_ciphers.Encryption_Package.src.com.Ciphers.*;
+import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
@@ -18,12 +16,11 @@ public class Cipher_GUI {
     private static JLabel cipherLabel;
     private static JLabel decryptLabel;
     private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher", "Affine Cipher" };
-    private static String aChoices[] = { "1", "3", "5", "7", "9", "11", "15", "17", "19", "21", "23", "25" }; // Prime
-                                                                                                              // Numbers
+    private static int[] aChoices = { 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 }; // Prime numbers
 
     public static JComboBox comboOne;
     public static JComboBox cipherCombo;
-    public static JComboBox aCombo;
+    public static JSpinner aSpin;
     public static JRadioButton radioOne;
     public static JRadioButton radioTwo;
     public static JButton submitButton;
@@ -52,9 +49,10 @@ public class Cipher_GUI {
         offsetSpin.setBounds(480, 20, 40, 20);
         offsetSpin.setVisible(false);
 
-        aCombo = new JComboBox(aChoices);
-        aCombo.setBounds(480, 20, 40, 20);
-        aCombo.setVisible(false);
+        SpinnerModel aValue = new SpinnerNumberModel(0, 0, 25, 1);
+        aSpin = new JSpinner(aValue);
+        aSpin.setBounds(480, 20, 40, 20);
+        aSpin.setVisible(false);
 
         SpinnerModel bValue = new SpinnerNumberModel(0, 0, 25, 1);
         bSpin = new JSpinner(bValue);
@@ -68,17 +66,17 @@ public class Cipher_GUI {
                 if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
                     labelFour.setVisible(true);
                     offsetSpin.setVisible(true);
-                    aCombo.setVisible(false);
+                    aSpin.setVisible(false);
                     bSpin.setVisible(false);
                 } else if (comboOne.getSelectedItem().equals("Affine Cipher")) {
-                    aCombo.setVisible(true);
+                    aSpin.setVisible(true);
                     bSpin.setVisible(true);
                     labelFour.setVisible(false);
                     offsetSpin.setVisible(false);
                 } else {
                     labelFour.setVisible(false);
                     offsetSpin.setVisible(false);
-                    aCombo.setVisible(false);
+                    aSpin.setVisible(false);
                     bSpin.setVisible(false);
                 }
             }
@@ -129,12 +127,20 @@ public class Cipher_GUI {
                     System.out.println("Affine Cipher is Selected");
                     if (radioOne.isSelected()) {
                         System.out.println("Encryption is Selected");
-                        outputArea.setText(Affine_Cipher.affineEncryption(inputArea.getText(),
-                                aCombo.getSelectedItem().toString(), (int) bSpin.getValue()));
+                        if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
+                            outputArea.setText(Affine_Cipher.affineEncryption(inputArea.getText(),
+                                    (int) aSpin.getValue(), (int) bSpin.getValue()));
+                        } else {
+                            outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
+                        }
                     } else if (radioTwo.isSelected()) {
                         System.out.println("Decryption is Selected");
-                        outputArea.setText(Affine_Cipher.affineDecryption(inputArea.getText(),
-                                aCombo.getSelectedItem().toString(), (int) bSpin.getValue()));
+                        if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
+                            outputArea.setText(Affine_Cipher.affineDecryption(inputArea.getText(),
+                                    (int) aSpin.getValue(), (int) bSpin.getValue()));
+                        } else {
+                            outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
+                        }
                     } else {
                         System.out.println("Error: No mode has been selected");
                     }
@@ -187,7 +193,7 @@ public class Cipher_GUI {
         mainFrame.add(submitButton);
         mainFrame.add(attemptButton);
         mainFrame.add(bSpin);
-        mainFrame.add(aCombo);
+        mainFrame.add(aSpin);
 
         mainFrame.setTitle("Encryption Program");
         mainFrame.setSize(1000, 700);// 400 width and 500 height
@@ -222,8 +228,13 @@ public class Cipher_GUI {
                             "No break is needed. ROT13 will always be a caesar cipher with offset = 13. Please utilize encryption/decryption functionality.");
                     breakDialog.setVisible(false);
                 } else if (cipherCombo.getSelectedItem().equals("Affine Cipher")) {
-                    // TODO : Implement
-                    System.out.println("To implement later");
+                    System.out.println("Affine Cipher is Selected");
+                    int[] keyGuess = Affine_Cipher.breakAffineCipher(decryptArea.getText());
+                    String decryptedGuess = Affine_Cipher.affineDecryption(decryptArea.getText(), keyGuess[0],
+                            keyGuess[1]);
+                    outputArea.setText("Results Recorded Below:\nA Key Guess : " + keyGuess[0] + "\n B Key Guess : "
+                            + keyGuess[1] + "\nDecrypted Message : " + decryptedGuess);
+                    breakDialog.setVisible(false);
                 } else {
                     System.out.println("Error: No Cipher Selected");
                 }

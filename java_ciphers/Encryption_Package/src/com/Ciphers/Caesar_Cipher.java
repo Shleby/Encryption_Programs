@@ -98,7 +98,7 @@ public class Caesar_Cipher {
         return probableOffset;
     }
 
-    private static double chiSquareTest(double[] expectedLettersFrequencies, long[] lettersFrequencies) {
+    public static double chiSquareTest(double[] expectedLettersFrequencies, long[] lettersFrequencies) {
         double[] chiSquares = new double[ALPHABET_SIZE];
 
         for (int i = 0; i < ALPHABET_SIZE; i++) {
@@ -122,15 +122,15 @@ public class Caesar_Cipher {
         return chiSquareResult;
     }
 
-    private static long[] observedLettersFrequencies(String message) {
+    public static long[] observedLettersFrequencies(String message) {
         return IntStream.rangeClosed('a', 'z').mapToLong(letter -> countLetter((char) letter, message)).toArray();
     }
 
-    private static long countLetter(char letter, String message) {
+    public static long countLetter(char letter, String message) {
         return message.chars().filter(character -> character == letter).count();
     }
 
-    private static double[] expectedLettersFrequencies(int messageLength) {
+    public static double[] expectedLettersFrequencies(int messageLength) {
         return Arrays.stream(englishLettersProbabilities).map(probability -> probability * messageLength).toArray();
     }
 }
