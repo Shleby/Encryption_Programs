@@ -56,7 +56,7 @@ public class Cipher_GUI {
 
         SpinnerModel bValue = new SpinnerNumberModel(0, 0, 25, 1);
         bSpin = new JSpinner(bValue);
-        bSpin.setBounds(520, 20, 40, 20);
+        bSpin.setBounds(540, 20, 40, 20);
         bSpin.setVisible(false);
 
         comboOne = new JComboBox(cipherChoices);
@@ -82,12 +82,12 @@ public class Cipher_GUI {
             }
         });
         labelThree = new JLabel("Select Mode: ");
-        labelThree.setBounds(20, 60, 80, 20);
+        labelThree.setBounds(20, 60, 120, 20);
 
         radioOne = new JRadioButton("Encryption Mode");
-        radioOne.setBounds(100, 60, 130, 20);
+        radioOne.setBounds(100, 60, 160, 20);
         radioTwo = new JRadioButton("Decryption Mode");
-        radioTwo.setBounds(230, 60, 130, 20);
+        radioTwo.setBounds(240, 60, 160, 20);
         ButtonGroup modeGroup = new ButtonGroup();
         modeGroup.add(radioOne);
         modeGroup.add(radioTwo);
