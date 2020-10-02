@@ -12,7 +12,8 @@ public class Affine_Cipher {
     private static HashMap<String, Integer> affineAlphabet = new HashMap<String, Integer>();
 
     public static int[] breakAffineCipher(String msg) {
-        ArrayList<Integer> keys = new ArrayList<Integer>();
+        ArrayList<Integer> Akeys = new ArrayList<Integer>();
+        ArrayList<Integer> Bkeys = new ArrayList<Integer>();
 
         // Calculate the expected frequencies of the letters in a given message
         // I.E Based on the prob a letter will appear in 1000 letters of english
@@ -36,21 +37,20 @@ public class Affine_Cipher {
                     // Finally, utilizing the chi square test to calculate chi-square
                     double chiSquare = Cipher_Utility.chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
                     chiSquares.add(chiSquare);
-                    keys.add(i);
-                    keys.add(j);
+                    Akeys.add(i);
+                    Bkeys.add(j);   
                 } 
             }
         }
-
-        int probableOffset = 0;
+        int probableChi = 0;
         int[] result = new int[2];
 
         for (int k = 0; k < chiSquares.size(); k++) {
-            if (chiSquares.get(k) < chiSquares.get(probableOffset)) {
-                probableOffset = k;
-                result[0] = keys.get(k);
-                result[1] = keys.get(k + 1);
-                System.out.println(String.format("Chi-Square for offset %d: %.2f", k, chiSquares.get(k)));
+            if (chiSquares.get(k) < chiSquares.get(probableChi)) {
+                probableChi = k;
+                
+                result[0] = Akeys.get(k);
+                result[1] = Bkeys.get(k);
             }
         }
         return result;
