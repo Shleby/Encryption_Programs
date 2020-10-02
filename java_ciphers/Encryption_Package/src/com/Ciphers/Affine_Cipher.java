@@ -1,29 +1,23 @@
 package java_ciphers.Encryption_Package.src.com.Ciphers;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
 
 public class Affine_Cipher {
-    public static int ALPHABET_SIZE = 26;
     public static int keyA;
     public static int keyB;
 
     private static HashMap<String, Integer> affineAlphabet = new HashMap<String, Integer>();
-    // The probability a english letter will be used in a text of 1000 letters
-    private static double[] englishLettersProbabilities = { 0.073, 0.009, 0.030, 0.044, 0.130, 0.028, 0.016, 0.035,
-            0.074, 0.002, 0.003, 0.035, 0.025, 0.078, 0.074, 0.027, 0.003, 0.077, 0.063, 0.093, 0.027, 0.013, 0.016,
-            0.005, 0.019, 0.001 };
 
     public static int[] breakAffineCipher(String msg) {
-        int[] keys = new int[2];
+        int[] keys = new int[624];
         int a = 0;
         int b = 0;
         // Calculate the expected frequencies of the letters in a given message
         // I.E Based on the prob a letter will appear in 1000 letters of english
         // we are finding what is the expected frequency given the length of our message
-        double[] expectedLettersFrequencies = Caesar_Cipher.expectedLettersFrequencies(msg.length());
+        double[] expectedLettersFrequencies = Cipher_Utility.expectedLettersFrequencies(msg.length());
 
         // Calculate the chi squares
 
@@ -31,40 +25,47 @@ public class Affine_Cipher {
         double[] chiSquares = new double[312];
 
         int index = 0;
+        int keysIndex = 0;
         // Iterate through every offset between 0 and 25, ten store it in chi-sqaure
         // after calculation
-        for (int i = 0; i < ALPHABET_SIZE - 1; i++) {
+        for (int i = 0; i < Cipher_Utility.ALPHABET_SIZE - 1; i++) {
             a++;
             b = 0;
-            for (int j = 0; j < ALPHABET_SIZE - 1; j++) {
+            for (int j = 0; j < Cipher_Utility.ALPHABET_SIZE - 1; j++) {
                 b++;
                 if (Cipher_Utility.isPrimeToM(a)) {
                     // Decipher the message based on the current iteration offset
                     String decipherAttempt = affineDecryption(msg, a, b);
 
                     // Counting the letters in each message
-                    long[] lettersFrequencies = Caesar_Cipher.observedLettersFrequencies(decipherAttempt);
+                    long[] lettersFrequencies = Cipher_Utility.observedLettersFrequencies(decipherAttempt);
 
                     // Finally, utilizing the chi square test to calculate chi-square
-                    double chiSquare = Caesar_Cipher.chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
+                    double chiSquare = Cipher_Utility.chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
                     chiSquares[index] = chiSquare;
+                    keys[keysIndex] = a;
+                    keys[keysIndex + 1] = b;
                 } else {
                     continue;
                 }
                 index++;
+                keysIndex += 2;
             }
         }
 
         int probableOffset = 0;
+        int[] result = new int[2];
 
-        for (int offset = 0; offset < chiSquares.length; offset++) {
-            System.out.println(String.format("Chi-Square for offset %d: %.2f", offset, chiSquares[offset]));
-            if (chiSquares[offset] < chiSquares[probableOffset]) {
-                probableOffset = offset;
+        for (int i = 0; i < chiSquares.length; i++) {
+            System.out.println(String.format("Chi-Square for offset %d: %.2f", i, chiSquares[i]));
+            if (chiSquares[i] < chiSquares[probableOffset]) {
+                probableOffset = i;
+                result[0] = keys[i];
+                result[1] = keys[i + 1];
             }
         }
 
-        return keys;
+        return result;
     }
 
     public static String affineEncryption(String msg, int a, int b) {
@@ -84,7 +85,7 @@ public class Affine_Cipher {
                 int currentPosition = affineAlphabet.get(String.valueOf(character).toLowerCase());
 
                 // Algorithm to calculate the new number
-                int newPosition = ((keyA * currentPosition) + keyB) % ALPHABET_SIZE;
+                int newPosition = ((keyA * currentPosition) + keyB) % Cipher_Utility.ALPHABET_SIZE;
 
                 // Utilize this new number to match it with a letter in the hash map and append
                 // to the new message
@@ -94,7 +95,7 @@ public class Affine_Cipher {
                 int currentPosition = affineAlphabet.get(String.valueOf(character));
 
                 // Algorithm to calculate the new number
-                int newPosition = ((keyA * currentPosition) + keyB) % ALPHABET_SIZE;
+                int newPosition = ((keyA * currentPosition) + keyB) % Cipher_Utility.ALPHABET_SIZE;
 
                 // Utilize this new number to match it with a letter in the hash map and append
                 // to the new message
@@ -121,14 +122,15 @@ public class Affine_Cipher {
             // If the character is upper case
             if (Character.isUpperCase(character)) {
                 // Algorithm to calculate the old character
-                char oldCharacter = (char) (((a_inverse * ((character + 'A' - keyB)) % ALPHABET_SIZE)) + 'A');
+                char oldCharacter = (char) (((a_inverse * ((character + 'A' - keyB)) % Cipher_Utility.ALPHABET_SIZE))
+                        + 'A');
 
                 // Append the old character
                 result.append(String.valueOf(oldCharacter));
             } else if (Character.isLowerCase(character)) {
                 // Algorithm to calculate the old number
-                char oldCharacter = (char) (((a_inverse * (character - 'a' - keyB + ALPHABET_SIZE)) % ALPHABET_SIZE)
-                        + 'a');
+                char oldCharacter = (char) (((a_inverse * (character - 'a' - keyB + Cipher_Utility.ALPHABET_SIZE))
+                        % Cipher_Utility.ALPHABET_SIZE) + 'a');
 
                 // Append the old character
                 result.append(String.valueOf(oldCharacter));
@@ -142,8 +144,8 @@ public class Affine_Cipher {
 
     public static int inverse(int a) {
         int tmp = 0;
-        for (int i = 0; i < ALPHABET_SIZE; i++) {
-            tmp = (a * i) % ALPHABET_SIZE;
+        for (int i = 0; i < Cipher_Utility.ALPHABET_SIZE; i++) {
+            tmp = (a * i) % Cipher_Utility.ALPHABET_SIZE;
 
             // if (a*i)%26 == 1
             if (tmp == 1) {

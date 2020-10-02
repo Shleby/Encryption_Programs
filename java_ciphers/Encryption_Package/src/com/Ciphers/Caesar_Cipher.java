@@ -1,7 +1,6 @@
 package java_ciphers.Encryption_Package.src.com.Ciphers;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
 
 /**
  * The caesar cipher is a substitution cipher that relies on a key to decide how
@@ -9,12 +8,6 @@ import java.util.stream.IntStream;
  * statistical method and finding the lowest chi-square to guess the offset key.
  */
 public class Caesar_Cipher {
-    private static int ALPHABET_SIZE = 26;
-    // The probability a english letter will be used in a text of 1000 letters
-    private static double[] englishLettersProbabilities = { 0.073, 0.009, 0.030, 0.044, 0.130, 0.028, 0.016, 0.035,
-            0.074, 0.002, 0.003, 0.035, 0.025, 0.078, 0.074, 0.027, 0.003, 0.077, 0.063, 0.093, 0.027, 0.013, 0.016,
-            0.005, 0.019, 0.001 };
-
     /**
      * Simple caesar encryption utiliziing a shift of offset which is chosen by the
      * spinner that is created once Caesar Cipher is selected.
@@ -25,12 +18,12 @@ public class Caesar_Cipher {
         for (char character : msg.toCharArray()) {
             if (Character.isLowerCase(character)) {
                 int currentPosition = character - 'a';
-                int newPosition = (currentPosition + offSet) % ALPHABET_SIZE;
+                int newPosition = (currentPosition + offSet) % Cipher_Utility.ALPHABET_SIZE;
                 char newCharacter = (char) ('a' + newPosition);
                 result.append(newCharacter);
             } else if (Character.isUpperCase(character)) {
                 int currentPosition = character - 'A';
-                int newPosition = (currentPosition + offSet) % ALPHABET_SIZE;
+                int newPosition = (currentPosition + offSet) % Cipher_Utility.ALPHABET_SIZE;
                 char newCharacter = (char) ('A' + newPosition);
                 result.append(newCharacter);
             } else {
@@ -46,12 +39,14 @@ public class Caesar_Cipher {
         for (char character : msg.toCharArray()) {
             if (Character.isLowerCase(character)) {
                 int currentPosition = character - 'a';
-                int newPosition = (currentPosition + (ALPHABET_SIZE - offSet)) % ALPHABET_SIZE;
+                int newPosition = (currentPosition + (Cipher_Utility.ALPHABET_SIZE - offSet))
+                        % Cipher_Utility.ALPHABET_SIZE;
                 char newCharacter = (char) ('a' + newPosition);
                 result.append(newCharacter);
             } else if (Character.isUpperCase(character)) {
                 int currentPosition = character - 'A';
-                int newPosition = (currentPosition + (ALPHABET_SIZE - offSet)) % ALPHABET_SIZE;
+                int newPosition = (currentPosition + (Cipher_Utility.ALPHABET_SIZE - offSet))
+                        % Cipher_Utility.ALPHABET_SIZE;
                 char newCharacter = (char) ('A' + newPosition);
                 result.append(newCharacter);
             } else {
@@ -65,12 +60,12 @@ public class Caesar_Cipher {
         // Calculate the expected frequencies of the letters in a given message
         // I.E Based on the prob a letter will appear in 1000 letters of english
         // we are finding what is the expected frequency given the length of our message
-        double[] expectedLettersFrequencies = expectedLettersFrequencies(msg.length());
+        double[] expectedLettersFrequencies = Cipher_Utility.expectedLettersFrequencies(msg.length());
 
         // Calculate the chi squares
 
         // Contains the calculated chi-squares for every offset between 0 and 25
-        double[] chiSquares = new double[ALPHABET_SIZE];
+        double[] chiSquares = new double[Cipher_Utility.ALPHABET_SIZE];
 
         // Iterate through every offset between 0 and 25, ten store it in chi-sqaure
         // after calculation
@@ -79,10 +74,10 @@ public class Caesar_Cipher {
             String decipherAttempt = caesarCipherDecryption(msg, offset);
 
             // Counting the letters in each message
-            long[] lettersFrequencies = observedLettersFrequencies(decipherAttempt);
+            long[] lettersFrequencies = Cipher_Utility.observedLettersFrequencies(decipherAttempt);
 
             // Finally, utilizing the chi square test to calculate chi-square
-            double chiSquare = chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
+            double chiSquare = Cipher_Utility.chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
             chiSquares[offset] = chiSquare;
         }
 
@@ -96,41 +91,5 @@ public class Caesar_Cipher {
         }
 
         return probableOffset;
-    }
-
-    public static double chiSquareTest(double[] expectedLettersFrequencies, long[] lettersFrequencies) {
-        double[] chiSquares = new double[ALPHABET_SIZE];
-
-        for (int i = 0; i < ALPHABET_SIZE; i++) {
-            // Calculate the residual for the current iteration by subtracting the Observed
-            // - Expected
-            double residual = lettersFrequencies[i] - expectedLettersFrequencies[i];
-
-            // Square the residual
-            residual = Math.pow(residual, 2);
-
-            // Divide the residual by the expected value and store it in the array
-            chiSquares[i] = residual / expectedLettersFrequencies[i];
-        }
-
-        double chiSquareResult = 0;
-        // Add up the sum of all the chi squares calculated
-        for (int j = 0; j < chiSquares.length; j++) {
-            chiSquareResult += chiSquares[j];
-        }
-
-        return chiSquareResult;
-    }
-
-    public static long[] observedLettersFrequencies(String message) {
-        return IntStream.rangeClosed('a', 'z').mapToLong(letter -> countLetter((char) letter, message)).toArray();
-    }
-
-    public static long countLetter(char letter, String message) {
-        return message.chars().filter(character -> character == letter).count();
-    }
-
-    public static double[] expectedLettersFrequencies(int messageLength) {
-        return Arrays.stream(englishLettersProbabilities).map(probability -> probability * messageLength).toArray();
     }
 }
