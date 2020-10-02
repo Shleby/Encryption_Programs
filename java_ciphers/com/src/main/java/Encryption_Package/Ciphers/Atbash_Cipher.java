@@ -1,7 +1,7 @@
-package java_ciphers.Encryption_Package.src.com.Ciphers;
+package java_ciphers.com.src.main.java.Encryption_Package.Ciphers;
 
 import java.util.HashMap;
-import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
+import java_ciphers.com.src.main.java.Encryption_Package.Utility.Cipher_Utility;
 
 public class Atbash_Cipher {
     private static HashMap<String, String> atbashAlphabet = new HashMap<String, String>();

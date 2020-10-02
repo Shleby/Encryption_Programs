@@ -1,12 +1,12 @@
-package java_ciphers.Encryption_Package.src.com.Display;
+package java_ciphers.com.src.main.java.Encryption_Package.Display;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import java_ciphers.Encryption_Package.src.com.Ciphers.*;
-import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
+import java_ciphers.com.src.main.java.Encryption_Package.Ciphers.*;
+import java_ciphers.com.src.main.java.Encryption_Package.Utility.Cipher_Utility;
 
 public class Cipher_GUI {
     private static JLabel labelOne;

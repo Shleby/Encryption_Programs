@@ -1,6 +1,5 @@
-package java_ciphers.Encryption_Package.src.com;
-
-import java_ciphers.Encryption_Package.src.com.Display.Cipher_GUI;
+package java_ciphers.com.src.main.java.Encryption_Package;
+import java_ciphers.com.src.main.java.Encryption_Package.Display.Cipher_GUI;
 
 /**
  * Main Method that launches the GUI

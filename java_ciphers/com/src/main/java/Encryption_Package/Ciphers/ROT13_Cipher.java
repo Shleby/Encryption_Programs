@@ -1,4 +1,4 @@
-package java_ciphers.Encryption_Package.src.com.Ciphers;
+package java_ciphers.com.src.main.java.Encryption_Package.Ciphers;
 
 /**
  * The Rot13 Cipher is simply a caesar cipher with a fixed key of 13. Therfore,
