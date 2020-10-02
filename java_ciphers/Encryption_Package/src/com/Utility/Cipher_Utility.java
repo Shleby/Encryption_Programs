@@ -10,6 +10,8 @@ import java.util.Arrays;
  * most if not all of the ciphers implemented
  */
 public class Cipher_Utility {
+    // A list of values that are relatively prime to m = 26
+    public static int[] primes = { 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 };
     public static final int ALPHABET_SIZE = 26;
     // The probability a english letter will be used in a text of 1000 letters
     public static double[] englishLettersProbabilities = { 0.073, 0.009, 0.030, 0.044, 0.130, 0.028, 0.016, 0.035,
@@ -53,9 +55,6 @@ public class Cipher_Utility {
     }
 
     public static boolean isPrimeToM(int n) {
-        // A list of values that are relatively prime to m = 26
-        int[] primes = { 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 };
-
         for (int i = 0; i < primes.length; i++) {
             if (primes[i] == n) {
                 return true;

@@ -1,5 +1,6 @@
 package java_ciphers.Encryption_Package.src.com.Ciphers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import java_ciphers.Encryption_Package.src.com.Utility.Cipher_Utility;
@@ -11,9 +12,8 @@ public class Affine_Cipher {
     private static HashMap<String, Integer> affineAlphabet = new HashMap<String, Integer>();
 
     public static int[] breakAffineCipher(String msg) {
-        int[] keys = new int[624];
-        int a = 0;
-        int b = 0;
+        ArrayList<Integer> keys = new ArrayList<Integer>();
+
         // Calculate the expected frequencies of the letters in a given message
         // I.E Based on the prob a letter will appear in 1000 letters of english
         // we are finding what is the expected frequency given the length of our message
@@ -22,49 +22,37 @@ public class Affine_Cipher {
         // Calculate the chi squares
 
         // Contains the calculated chi-squares for every permutation
-        double[] chiSquares = new double[312];
+        ArrayList<Double> chiSquares = new ArrayList<Double>();
 
-        int index = 0;
-        int keysIndex = 0;
-        // Iterate through every offset between 0 and 25, ten store it in chi-sqaure
-        // after calculation
-        for (int i = 0; i < Cipher_Utility.ALPHABET_SIZE - 1; i++) {
-            a++;
-            b = 0;
-            for (int j = 0; j < Cipher_Utility.ALPHABET_SIZE - 1; j++) {
-                b++;
-                if (Cipher_Utility.isPrimeToM(a)) {
+        for (int i = 0; i < Cipher_Utility.primes.length * 2 + 2; i++) {
+            for (int j = 0; j < Cipher_Utility.ALPHABET_SIZE; j++) {
+                if (Cipher_Utility.isPrimeToM(i)) {
                     // Decipher the message based on the current iteration offset
-                    String decipherAttempt = affineDecryption(msg, a, b);
+                    String decipherAttempt = affineDecryption(msg, i, j);
 
                     // Counting the letters in each message
                     long[] lettersFrequencies = Cipher_Utility.observedLettersFrequencies(decipherAttempt);
 
                     // Finally, utilizing the chi square test to calculate chi-square
                     double chiSquare = Cipher_Utility.chiSquareTest(expectedLettersFrequencies, lettersFrequencies);
-                    chiSquares[index] = chiSquare;
-                    keys[keysIndex] = a;
-                    keys[keysIndex + 1] = b;
-                } else {
-                    continue;
-                }
-                index++;
-                keysIndex += 2;
+                    chiSquares.add(chiSquare);
+                    keys.add(i);
+                    keys.add(j);
+                } 
             }
         }
 
         int probableOffset = 0;
         int[] result = new int[2];
 
-        for (int i = 0; i < chiSquares.length; i++) {
-            System.out.println(String.format("Chi-Square for offset %d: %.2f", i, chiSquares[i]));
-            if (chiSquares[i] < chiSquares[probableOffset]) {
-                probableOffset = i;
-                result[0] = keys[i];
-                result[1] = keys[i + 1];
+        for (int k = 0; k < chiSquares.size(); k++) {
+            if (chiSquares.get(k) < chiSquares.get(probableOffset)) {
+                probableOffset = k;
+                result[0] = keys.get(k);
+                result[1] = keys.get(k + 1);
+                System.out.println(String.format("Chi-Square for offset %d: %.2f", k, chiSquares.get(k)));
             }
         }
-
         return result;
     }
 

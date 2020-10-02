@@ -60,7 +60,7 @@ public class Cipher_GUI {
         bSpin.setVisible(false);
 
         comboOne = new JComboBox(cipherChoices);
-        comboOne.setBounds(190, 20, 110, 20);
+        comboOne.setBounds(190, 20, 120, 20);
         comboOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent j) {
                 if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
@@ -232,7 +232,7 @@ public class Cipher_GUI {
                     int[] keyGuess = Affine_Cipher.breakAffineCipher(decryptArea.getText());
                     String decryptedGuess = Affine_Cipher.affineDecryption(decryptArea.getText(), keyGuess[0],
                             keyGuess[1]);
-                    outputArea.setText("Results Recorded Below:\nA Key Guess : " + keyGuess[0] + "\n B Key Guess : "
+                    outputArea.setText("Results Recorded Below:\nA Key Guess : " + keyGuess[0] + "\nB Key Guess : "
                             + keyGuess[1] + "\nDecrypted Message : " + decryptedGuess);
                     breakDialog.setVisible(false);
                 } else {
