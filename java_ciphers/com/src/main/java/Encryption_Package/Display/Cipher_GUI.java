@@ -1,12 +1,12 @@
-package java_ciphers.com.src.main.java.Encryption_Package.Display;
+package Encryption_Package.Display;
 
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import java_ciphers.com.src.main.java.Encryption_Package.Ciphers.*;
-import java_ciphers.com.src.main.java.Encryption_Package.Utility.Cipher_Utility;
+import Encryption_Package.Ciphers.*;
+import Encryption_Package.Utility.Cipher_Utility;
 
 public class Cipher_GUI {
     private static JLabel labelOne;
@@ -17,7 +17,10 @@ public class Cipher_GUI {
     private static JLabel decryptLabel;
     private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher", "Affine Cipher" };
     private static int[] aChoices = { 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 }; // Prime numbers
-
+    private static JFrame breakDialog;
+    private static JFrame mainFrame;
+    
+    public static ButtonGroup modeGroup;
     public static JComboBox comboOne;
     public static JComboBox cipherCombo;
     public static JSpinner aSpin;
@@ -34,8 +37,8 @@ public class Cipher_GUI {
     public static JSpinner bSpin;
 
     public static void launchGui() {
-        JFrame mainFrame = new JFrame();
-        JFrame breakDialog = new JFrame();
+        mainFrame = new JFrame();
+        breakDialog = new JFrame();
 
         labelOne = new JLabel("Choose Encryption Cipher: ");
         labelOne.setBounds(20, 20, 180, 20);
@@ -88,7 +91,7 @@ public class Cipher_GUI {
         radioOne.setBounds(100, 60, 160, 20);
         radioTwo = new JRadioButton("Decryption Mode");
         radioTwo.setBounds(240, 60, 160, 20);
-        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup = new ButtonGroup();
         modeGroup.add(radioOne);
         modeGroup.add(radioTwo);
 

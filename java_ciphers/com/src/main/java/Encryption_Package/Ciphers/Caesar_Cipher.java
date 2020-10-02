@@ -1,6 +1,6 @@
-package java_ciphers.com.src.main.java.Encryption_Package.Ciphers;
+package Encryption_Package.Ciphers;
 
-import java_ciphers.com.src.main.java.Encryption_Package.Utility.Cipher_Utility;
+import Encryption_Package.Utility.Cipher_Utility;
 
 /**
  * The caesar cipher is a substitution cipher that relies on a key to decide how

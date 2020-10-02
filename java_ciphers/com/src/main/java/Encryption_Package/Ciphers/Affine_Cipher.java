@@ -1,9 +1,9 @@
-package java_ciphers.com.src.main.java.Encryption_Package.Ciphers;
+package Encryption_Package.Ciphers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java_ciphers.com.src.main.java.Encryption_Package.Utility.Cipher_Utility;
+import Encryption_Package.Utility.Cipher_Utility;
 
 public class Affine_Cipher {
     public static int keyA;

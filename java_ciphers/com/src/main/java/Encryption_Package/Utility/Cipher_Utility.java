@@ -1,4 +1,4 @@
-package java_ciphers.com.src.main.java.Encryption_Package.Utility;
+package Encryption_Package.Utility;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
