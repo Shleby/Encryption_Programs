@@ -15,14 +15,13 @@ public class Cipher_GUI {
     private static JLabel labelFour;
     private static JLabel cipherLabel;
     private static JLabel decryptLabel;
-    private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher", "Affine Cipher" };
-    private static int[] aChoices = { 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25 }; // Prime numbers
+    private static String cipherChoices[] = { "", "Atbash Cipher", "ROT13 Cipher", "Caesar Cipher", "Affine Cipher", "Rail Fence Cipher" };
     private static JFrame breakDialog;
     private static JFrame mainFrame;
     
     public static ButtonGroup modeGroup;
-    public static JComboBox comboOne;
-    public static JComboBox cipherCombo;
+    public static JComboBox<String> comboOne;
+    public static JComboBox<String> cipherCombo;
     public static JSpinner aSpin;
     public static JRadioButton radioOne;
     public static JRadioButton radioTwo;
@@ -35,7 +34,11 @@ public class Cipher_GUI {
     public static JTextArea decryptArea;
     public static JSpinner offsetSpin;
     public static JSpinner bSpin;
+    public static JCheckBox cbRails;
 
+    /**
+     * Launches GUI for the application. Initializes java swing widgets
+     */
     public static void launchGui() {
         mainFrame = new JFrame();
         breakDialog = new JFrame();
@@ -43,13 +46,13 @@ public class Cipher_GUI {
         labelOne = new JLabel("Choose Encryption Cipher: ");
         labelOne.setBounds(20, 20, 180, 20);
 
-        labelFour = new JLabel("Select an Offset Value: ");
+        labelFour = new JLabel("Select an offset/key Value: ");
         labelFour.setBounds(340, 20, 180, 20);
         labelFour.setVisible(false);
 
         SpinnerModel offsetValue = new SpinnerNumberModel(6, 1, 26, 1);
         offsetSpin = new JSpinner(offsetValue);
-        offsetSpin.setBounds(480, 20, 40, 20);
+        offsetSpin.setBounds(520, 20, 40, 20);
         offsetSpin.setVisible(false);
 
         SpinnerModel aValue = new SpinnerNumberModel(0, 0, 25, 1);
@@ -62,25 +65,22 @@ public class Cipher_GUI {
         bSpin.setBounds(540, 20, 40, 20);
         bSpin.setVisible(false);
 
-        comboOne = new JComboBox(cipherChoices);
+        cbRails = new JCheckBox("Replace spaces with underscores?");
+        cbRails.setBounds(520, 60, 280, 20);
+        cbRails.setVisible(false);
+
+        comboOne = new JComboBox<String>(cipherChoices);
         comboOne.setBounds(190, 20, 120, 20);
         comboOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent j) {
                 if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
-                    labelFour.setVisible(true);
-                    offsetSpin.setVisible(true);
-                    aSpin.setVisible(false);
-                    bSpin.setVisible(false);
+                    visibleChain(true, true, false, false, false);
+                } else if (comboOne.getSelectedItem().equals("Rail Fence Cipher")) {
+                    visibleChain(true, true, false, false, true);
                 } else if (comboOne.getSelectedItem().equals("Affine Cipher")) {
-                    aSpin.setVisible(true);
-                    bSpin.setVisible(true);
-                    labelFour.setVisible(false);
-                    offsetSpin.setVisible(false);
+                    visibleChain(false, false, true, true, false);
                 } else {
-                    labelFour.setVisible(false);
-                    offsetSpin.setVisible(false);
-                    aSpin.setVisible(false);
-                    bSpin.setVisible(false);
+                    visibleChain(false, false, false, false, false);
                 }
             }
         });
@@ -88,7 +88,7 @@ public class Cipher_GUI {
         labelThree.setBounds(20, 60, 120, 20);
 
         radioOne = new JRadioButton("Encryption Mode");
-        radioOne.setBounds(100, 60, 160, 20);
+        radioOne.setBounds(100, 60, 140, 20);
         radioTwo = new JRadioButton("Decryption Mode");
         radioTwo.setBounds(240, 60, 160, 20);
         modeGroup = new ButtonGroup();
@@ -114,61 +114,15 @@ public class Cipher_GUI {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (comboOne.getSelectedItem().equals("Caesar Cipher")) {
-                    System.out.println("Caesar Cipher is Selected");
-                    if (radioOne.isSelected()) {
-                        System.out.println("Encryption is Selected");
-                        outputArea.setText(
-                                Caesar_Cipher.caesarCipherEncryption(inputArea.getText(), (int) offsetSpin.getValue()));
-                    } else if (radioTwo.isSelected()) {
-                        System.out.println("Decryption is Selected");
-                        outputArea.setText(
-                                Caesar_Cipher.caesarCipherDecryption(inputArea.getText(), (int) offsetSpin.getValue()));
-                    } else {
-                        System.out.println("Error: No mode has been selected");
-                    }
+                    submitContent("Caesar Cipher");
                 } else if (comboOne.getSelectedItem().equals("Affine Cipher")) {
-                    System.out.println("Affine Cipher is Selected");
-                    if (radioOne.isSelected()) {
-                        System.out.println("Encryption is Selected");
-                        if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
-                            outputArea.setText(Affine_Cipher.affineEncryption(inputArea.getText(),
-                                    (int) aSpin.getValue(), (int) bSpin.getValue()));
-                        } else {
-                            outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
-                        }
-                    } else if (radioTwo.isSelected()) {
-                        System.out.println("Decryption is Selected");
-                        if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
-                            outputArea.setText(Affine_Cipher.affineDecryption(inputArea.getText(),
-                                    (int) aSpin.getValue(), (int) bSpin.getValue()));
-                        } else {
-                            outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
-                        }
-                    } else {
-                        System.out.println("Error: No mode has been selected");
-                    }
+                    submitContent("Affine Cipher");
                 } else if (comboOne.getSelectedItem().equals("Atbash Cipher")) {
-                    System.out.println("Atbash Cipher is Selected");
-                    if (radioOne.isSelected()) {
-                        System.out.println("Encryption is Selected");
-                        outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
-                    } else if (radioTwo.isSelected()) {
-                        System.out.println("Decryption is Selected");
-                        outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
-                    } else {
-                        System.out.println("Error: No mode has been selected");
-                    }
+                    submitContent("Atbash Cipher");
                 } else if (comboOne.getSelectedItem().equals("ROT13 Cipher")) {
-                    System.out.println("ROT13 Cipher is Selected");
-                    if (radioOne.isSelected()) {
-                        System.out.println("Encryption is Selected");
-                        outputArea.setText(ROT13_Cipher.rot13Encryption(inputArea.getText()));
-                    } else if (radioTwo.isSelected()) {
-                        System.out.println("Decryption is Selected");
-                        outputArea.setText(ROT13_Cipher.rot13Decryption(inputArea.getText()));
-                    } else {
-                        System.out.println("Error: No mode has been selected");
-                    }
+                    submitContent("ROT13 Cipher");
+                } else if (comboOne.getSelectedItem().equals("Rail Fence Cipher")) {
+                    submitContent("Rail Fence Cipher");
                 } else {
                     System.out.println("Error: No Cipher Selected");
                 }
@@ -197,6 +151,7 @@ public class Cipher_GUI {
         mainFrame.add(attemptButton);
         mainFrame.add(bSpin);
         mainFrame.add(aSpin);
+        mainFrame.add(cbRails);
 
         mainFrame.setTitle("Encryption Program");
         mainFrame.setSize(1000, 700);// 400 width and 500 height
@@ -204,7 +159,7 @@ public class Cipher_GUI {
         mainFrame.setVisible(true);// making the frame visible
 
         cipherLabel = new JLabel("Select the cipher you wish to break: ");
-        cipherCombo = new JComboBox(cipherChoices);
+        cipherCombo = new JComboBox<String>(cipherChoices);
 
         decryptLabel = new JLabel("Enter the message you wish to break: ");
         decryptArea = new JTextArea();
@@ -269,6 +224,69 @@ public class Cipher_GUI {
         });
 
         mainFrame.add(clearButton);
+    }
 
+    /**
+     * Actions to be taken when the submit button is pushed
+     * @param cipher The current cipher selected
+     */
+    private static void submitContent(String cipher) {
+        System.out.println(cipher + " is Selected");
+        if (radioOne.isSelected()) {
+            System.out.println("Encryption is Selected");
+            if (cipher == "Caesar Cipher") {
+                outputArea.setText(Caesar_Cipher.caesarCipherEncryption(inputArea.getText(), (int) offsetSpin.getValue()));
+            } else if (cipher == "Atbash Cipher") {
+                outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
+            } else if (cipher == "Affine Cipher") {
+                if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
+                    outputArea.setText(Affine_Cipher.affineEncryption(inputArea.getText(),
+                            (int) aSpin.getValue(), (int) bSpin.getValue()));
+                } else {
+                    outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
+                }
+            } else if (cipher == "ROT13 Cipher") {
+                outputArea.setText(ROT13_Cipher.rot13Encryption(inputArea.getText()));
+            } else if (cipher == "Rail Fence Cipher") {
+                outputArea.setText(
+                    Rail_Fence_Cipher.railFenceEncryption(inputArea.getText(), (int) offsetSpin.getValue(), !cbRails.isSelected()));
+            }
+        } else if (radioTwo.isSelected()) {
+            System.out.println("Decryption is Selected");
+            if (cipher == "Caesar Cipher") {
+                outputArea.setText(Caesar_Cipher.caesarCipherDecryption(inputArea.getText(), (int) offsetSpin.getValue()));
+            } else if (cipher == "Atbash Cipher") {
+                outputArea.setText(Atbash_Cipher.atbashCipherCryption(inputArea.getText()));
+            } else if (cipher == "Affine Cipher") {
+                if (Cipher_Utility.isPrimeToM((int) aSpin.getValue())) {
+                    outputArea.setText(Affine_Cipher.affineDecryption(inputArea.getText(),
+                            (int) aSpin.getValue(), (int) bSpin.getValue()));
+                } else {
+                    outputArea.setText("Error : Please choose a prime number for Key A relative to 26.");
+                }
+            } else if (cipher == "ROT13 Cipher") {
+                outputArea.setText(ROT13_Cipher.rot13Decryption(inputArea.getText()));
+            } else if (cipher == "Rail Fence Cipher") {
+                outputArea.setText(Rail_Fence_Cipher.railFenceDecryption(inputArea.getText(), (int) offsetSpin.getValue(), cbRails.isSelected()));
+            }
+        } else {
+            System.out.println("Error: No mode has been selected");
+        }
+    }
+
+    /**
+     * Controls the visibility of these widgets based off of the comboOne selected item
+     * @param label labelFour widget
+     * @param offsetSpin offsetSpin widget
+     * @param a aSpin widget
+     * @param b bSpin widget
+     * @param cb cbRails widget
+     */
+    private static void visibleChain(boolean lbl, boolean offset, boolean a, boolean b, boolean cb) {
+        labelFour.setVisible(lbl);
+        offsetSpin.setVisible(offset);
+        aSpin.setVisible(a);
+        bSpin.setVisible(b);
+        cbRails.setVisible(cb);
     }
 }

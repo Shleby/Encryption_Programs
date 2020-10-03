@@ -18,6 +18,12 @@ public class Cipher_Utility {
             0.074, 0.002, 0.003, 0.035, 0.025, 0.078, 0.074, 0.027, 0.003, 0.077, 0.063, 0.093, 0.027, 0.013, 0.016,
             0.005, 0.019, 0.001 };
 
+    /**
+     * Calculate chi square distribution between values between two arrays
+     * @param expectedLettersFrequencies
+     * @param lettersFrequencies
+     * @return array of calculated chi squares
+     */
     public static double chiSquareTest(double[] expectedLettersFrequencies, long[] lettersFrequencies) {
         double[] chiSquares = new double[ALPHABET_SIZE];
 
@@ -42,6 +48,11 @@ public class Cipher_Utility {
         return chiSquareResult;
     }
 
+    /**
+     * This function is used to find how frequent a letter appears in a given string
+     * @param message message to be deciphered
+     * @return Array showing the frequency a letter appears in the message
+     */
     public static long[] observedLettersFrequencies(String message) {
         return IntStream.rangeClosed('a', 'z').mapToLong(letter -> countLetter((char) letter, message)).toArray();
     }
@@ -50,10 +61,22 @@ public class Cipher_Utility {
         return message.chars().filter(character -> character == letter).count();
     }
 
+    /**
+     * This function calculates the amount of letters we expect to see in a message
+     * based off of the english letters probabilities compared to the length of the message we are
+     * deciphering
+     * @param messageLength length of the message to be deciphered
+     * @return array of frequency calculation to show us how many of each letter we should expect to see based off of a message of size messageLength
+     */
     public static double[] expectedLettersFrequencies(int messageLength) {
         return Arrays.stream(englishLettersProbabilities).map(probability -> probability * messageLength).toArray();
     }
 
+    /**
+     * Tells us if a number is prime to m. M is typicall 26 (alphabet size)
+     * @param n Number to be checked
+     * @return True or false based off of if it is prime to m or not.
+     */
     public static boolean isPrimeToM(int n) {
         for (int i = 0; i < primes.length; i++) {
             if (primes[i] == n) {
@@ -64,6 +87,12 @@ public class Cipher_Utility {
         return false;
     }
 
+    /**
+     * Returns the value of a Hashmap.
+     * @param c The key of a hash map
+     * @param map The has map to be looked through
+     * @return The value of the hash map requested
+     */ 
     public static char getValue(int c, HashMap<String, Integer> map) {
         for (Entry<String, Integer> entry : map.entrySet()) {
             if (entry.getValue().equals(c)) {
@@ -73,6 +102,11 @@ public class Cipher_Utility {
         return '~';
     }
 
+    /**
+     * Initializes a hash map with the keys in alphabetical order and values in reverse alphabetical order
+     * @param map Map to be initatized
+     * @return key, value pairs to be put into hashmap
+     */
     public static HashMap<String, String> mapInitalize(HashMap<String, String> map) {
         map.put("a", "z");
         map.put("b", "y");
